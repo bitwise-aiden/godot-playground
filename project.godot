@@ -11,5 +11,16 @@ config_version=5
 [application]
 
 config/name="godot-playground"
+run/main_scene="res://game.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
+environment/defaults/default_clear_color=Color(0.211765, 0.129412, 0.0941176, 1)
