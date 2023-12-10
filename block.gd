@@ -24,7 +24,9 @@ func _ready() -> void:
 
 # Public methods
 
-func move_in(from : float) -> void:
+func move_in(
+	from : float,
+) -> void:
 	__sprite.visible = true
 	__sprite.position.y = from
 
@@ -38,3 +40,26 @@ func move_in(from : float) -> void:
 		0.0,
 		0.5 + randf() * 0.2,
 	)
+
+	await tween.finished
+
+
+func move_out(
+	to : float,
+) -> void:
+	var tween : Tween = create_tween()
+
+	tween.set_ease(Tween.EASE_OUT)
+	tween.set_trans(Tween.TRANS_CIRC)
+	tween.tween_property(
+		__sprite,
+		"position:y",
+		to,
+		0.5 + randf() * 0.2,
+	)
+
+	await tween.finished
+
+	__sprite.visible = false
+
+
