@@ -4,9 +4,9 @@ class_name Block extends Node2D
 # Private constants
 
 const __SPRITES : Array[Texture] = [
-	preload("res://block_0.png"),
-	preload("res://block_1.png"),
-	preload("res://block_2.png"),
+	preload("res://stone_tile_0.png"),
+	preload("res://stone_tile_1.png"),
+	preload("res://stone_tile_2.png"),
 ]
 
 

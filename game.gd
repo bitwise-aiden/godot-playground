@@ -37,7 +37,7 @@ func _process(
 		tween.tween_property(
 			__camera,
 			"position",
-			__dungeon.get_camera_target() - Vector2(640.0, 528.0),
+			__dungeon.get_camera_target() - Vector2(960.0, 760.0),
 			0.5,
 		)
 
