@@ -15,7 +15,7 @@ var __prev_player_coord : Vector2i
 func _ready() -> void:
 	await get_tree().process_frame
 
-	__dungeon.show_blocks()
+	__dungeon.blocks_enter(Vector2.UP)
 	__player.set_direction_scalar(
 		__dungeon.get_diagonal_scalar()
 	)

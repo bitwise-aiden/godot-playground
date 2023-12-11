@@ -25,11 +25,11 @@ func _ready() -> void:
 
 # Public methods
 
-func move_in(
-	from : float,
+func enter(
+	direction : Vector2,
 ) -> void:
 	__sprite.visible = true
-	__sprite.position.y = from
+	__sprite.position = direction * 200.0
 
 	var tween : Tween = create_tween()
 
@@ -37,28 +37,25 @@ func move_in(
 	tween.set_trans(Tween.TRANS_CIRC)
 	tween.tween_property(
 		__sprite,
-		"position:y",
-		0.0,
-		0.5 ,
+		"position",
+		Vector2.ZERO,
+		0.2,
 	)
 
 	await tween.finished
 
 
-func move_out(
-	to : float,
-	behind : bool
+func exit(
+	direction : Vector2,
 ) -> void:
-	z_index += -10 if behind else 10
-
 	var tween : Tween = create_tween()
 
 	tween.set_ease(Tween.EASE_IN_OUT)
 	tween.tween_property(
 		__sprite,
-		"position:y",
-		to,
-		0.5 + randf() * 0.2,
+		"position",
+		direction * 200.0,
+		0.2,
 	)
 
 	await tween.finished
