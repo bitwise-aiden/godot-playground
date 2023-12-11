@@ -7,6 +7,7 @@ class_name Dungeon extends Node2D
 
 var __block_centre : Vector2i = Vector2i(2, 3)
 var __block_locations : Array[Vector3i]
+var __direction_scalar : Vector2
 
 
 # Lifecycle methods
@@ -19,24 +20,17 @@ func _ready() -> void:
 			var delta : Vector2i = coord - __block_centre
 
 			__block_locations.append(Vector3i(delta.x, delta.y, i))
-			__layers[i].erase_cell(0, coord)
 
-	await get_tree().process_frame
+	var ground : TileMap = __layers[0]
+	var centre : Vector2 = ground.map_to_local(__block_centre)
 
-	spawn_room(__block_centre)
+	# Using offset angles to determine correct cells
+	var north_east : Vector2 = ground.map_to_local(__block_centre + Vector2i.RIGHT)
+	__direction_scalar = (north_east - centre).normalized()
+
 
 
 # Public methods
-
-func get_camera_target() -> Vector2:
-	return __layers[0].to_global(__layers[0].map_to_local(__block_centre))
-
-
-func get_mouse_coord() -> Vector2i:
-	return __layers[0].local_to_map(
-		__layers[0].get_local_mouse_position()
-	)
-
 
 func get_blocks() -> Array[Block]:
 	var blocks : Array[Block] = []
@@ -47,6 +41,15 @@ func get_blocks() -> Array[Block]:
 				blocks.append(child)
 
 	return blocks
+
+
+func get_camera_target() -> Vector2:
+	return __layers[0].to_global(__layers[0].map_to_local(__block_centre))
+
+
+func get_diagonal_scalar() -> Vector2:
+	return __direction_scalar
+
 
 
 func is_ground_block(
@@ -63,10 +66,18 @@ func is_door_block(
 	return delta.length() == 3
 
 
-func map_to_local(
+func location_to_map(
+	location : Vector2,
+) -> Vector2i:
+	var local_location : Vector2 = __layers[0].to_local(location)
+	return __layers[0].local_to_map(local_location)
+
+
+func map_to_locations(
 	coord : Vector2i,
 ) -> Vector2:
-	return __layers[0].map_to_local(coord)
+	var local_location : Vector2 = __layers[0].map_to_local(coord)
+	return __layers[0].to_global(local_location)
 
 
 func spawn_room(

@@ -19,12 +19,12 @@ sources/1 = SubResource("TileSetScenesCollectionSource_f2v3a")
 script = ExtResource("1_xng4h")
 
 [node name="dungeon" type="Node2D" parent="."]
+position = Vector2(640, 360)
+scale = Vector2(3.5, 3.5)
 script = ExtResource("2_y7hv0")
 
 [node name="layer_0" type="TileMap" parent="dungeon"]
 y_sort_enabled = true
-position = Vector2(640, 360)
-scale = Vector2(3.5, 3.5)
 tile_set = SubResource("TileSet_aeg28")
 format = 2
 layer_0/y_sort_enabled = true
@@ -32,8 +32,6 @@ layer_0/tile_data = PackedInt32Array(65535, 1, 65536, 131071, 1, 65536, 196607, 
 
 [node name="layer_1" type="TileMap" parent="dungeon"]
 y_sort_enabled = true
-position = Vector2(640, 360)
-scale = Vector2(3.5, 3.5)
 tile_set = SubResource("TileSet_aeg28")
 format = 2
 layer_0/y_sort_enabled = true
@@ -41,8 +39,6 @@ layer_0/tile_data = PackedInt32Array(262142, 1, 65536, 131070, 1, 65536, 65534, 
 
 [node name="layer_2" type="TileMap" parent="dungeon"]
 y_sort_enabled = true
-position = Vector2(640, 360)
-scale = Vector2(3.5, 3.5)
 tile_set = SubResource("TileSet_aeg28")
 format = 2
 layer_0/y_sort_enabled = true
@@ -50,8 +46,6 @@ layer_0/tile_data = PackedInt32Array(262141, 1, 65536, 196605, 1, 65536, 65533, 
 
 [node name="layer_3" type="TileMap" parent="dungeon"]
 y_sort_enabled = true
-position = Vector2(640, 360)
-scale = Vector2(3.5, 3.5)
 tile_set = SubResource("TileSet_aeg28")
 format = 2
 layer_0/y_sort_enabled = true
@@ -59,8 +53,6 @@ layer_0/tile_data = PackedInt32Array(196604, 1, 65536, 131068, 1, 65536, 65532, 
 
 [node name="layer_4" type="TileMap" parent="dungeon"]
 y_sort_enabled = true
-position = Vector2(640, 360)
-scale = Vector2(3.5, 3.5)
 tile_set = SubResource("TileSet_aeg28")
 format = 2
 layer_0/y_sort_enabled = true
@@ -68,15 +60,12 @@ layer_0/tile_data = PackedInt32Array(131067, 1, 65536, 65531, 1, 65536, -5, 1, 6
 
 [node name="layer_5" type="TileMap" parent="dungeon"]
 y_sort_enabled = true
-position = Vector2(640, 360)
-scale = Vector2(3.5, 3.5)
 tile_set = SubResource("TileSet_aeg28")
 format = 2
 layer_0/y_sort_enabled = true
 layer_0/tile_data = PackedInt32Array(65530, 1, 65536, -6, 1, 65536, -65542, 1, 65536, -131078, 1, 65536, -196614, 1, 65536, -262150, 1, 65536, -262149, 1, 65536, -262148, 1, 65536, -262147, 1, 65536, -262146, 1, 65536, -262145, 1, 65536)
 
 [node name="player" type="Sprite2D" parent="."]
-z_index = 1
 y_sort_enabled = true
 position = Vector2(640, 528)
 scale = Vector2(0.5, 0.5)
