@@ -18,7 +18,8 @@ const __SPRITES : Array[Texture] = [
 # Lifecycle methods
 
 func _ready() -> void:
-	__sprite.texture = __SPRITES[randi() % __SPRITES.size()]
+	var rand : PackedInt64Array = rand_from_seed(position.x + position.y)
+	__sprite.texture = __SPRITES[rand[0] % __SPRITES.size()]
 	__sprite.visible = false
 
 
@@ -38,7 +39,7 @@ func move_in(
 		__sprite,
 		"position:y",
 		0.0,
-		0.5 + randf() * 0.2,
+		0.5 ,
 	)
 
 	await tween.finished

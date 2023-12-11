@@ -14,7 +14,7 @@ func _physics_process(delta: float) -> void:
 		"ui_up", "ui_down",
 	).normalized()
 
-	position += direction * __direction_scalar * delta * 100.0
+	position += direction * __direction_scalar * delta * 200.0
 
 # Public methods
 

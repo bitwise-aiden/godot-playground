@@ -29,16 +29,13 @@ func _ready() -> void:
 	__direction_scalar = (north_east - centre).normalized()
 
 
-
 # Public methods
 
 func get_blocks() -> Array[Block]:
 	var blocks : Array[Block] = []
 
 	for layer in __layers:
-		for child in layer.get_children(true):
-			if child is Block:
-				blocks.append(child)
+		blocks += layer.get_blocks()
 
 	return blocks
 
@@ -49,7 +46,6 @@ func get_camera_target() -> Vector2:
 
 func get_diagonal_scalar() -> Vector2:
 	return __direction_scalar
-
 
 
 func is_ground_block(
@@ -104,19 +100,35 @@ func spawn_room(
 
 	await get_tree().process_frame
 
-	for block in get_blocks():
-		var coord : Vector3i = __block_location(block)
-
-		match [prev_blocks.has(coord), curr_blocks.has(coord)]:
-			[true, false]:
-				__erase_block(block, behind)
-			[false, true]:
-				__show_block(block)
+	erase_blocks(behind, curr_blocks.keys())
+	show_blocks(prev_blocks.keys())
 
 
-func show_blocks() -> void:
-	for block in get_blocks():
-		__show_block(block)
+func show_blocks(
+	except : Array = [],
+) -> void:
+	for i in __layers.size():
+		for block in __layers[i].get_blocks():
+			if except.find(__block_location(block)) != -1:
+				continue
+
+			__show_block(block)
+
+			await get_tree().create_timer(0.001).timeout
+
+
+func erase_blocks(
+	behind : bool,
+	except : Array = [],
+) -> void:
+	for i in __layers.size():
+		for block in __layers[__layers.size() - 1 - i].get_blocks():
+			if except.find(__block_location(block)) != -1:
+				continue
+
+			__erase_block(block, behind)
+
+		await get_tree().create_timer(0.01).timeout
 
 
 # Private methods
@@ -136,7 +148,6 @@ func __show_block(
 ) -> void:
 	var layer : int = __block_location(block).z
 	block.move_in(-200.0 if layer > 0 else 200.0)
-	#block.z_index = layer + 1
 
 
 func __erase_block(

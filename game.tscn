@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://blcmb7qxwm3hk"]
+[gd_scene load_steps=9 format=3 uid="uid://blcmb7qxwm3hk"]
 
 [ext_resource type="PackedScene" uid="uid://dk0x2n3o8hcle" path="res://block.tscn" id="1_odc53"]
 [ext_resource type="Script" path="res://game.gd" id="1_xng4h"]
 [ext_resource type="Script" path="res://dungeon.gd" id="2_y7hv0"]
 [ext_resource type="Texture2D" uid="uid://wedfwc5yiif6" path="res://icon.svg" id="3_j6u3g"]
 [ext_resource type="Script" path="res://player.gd" id="3_tie54"]
+[ext_resource type="Script" path="res://dungeon_layer.gd" id="4_eq3gc"]
 
 [sub_resource type="TileSetScenesCollectionSource" id="TileSetScenesCollectionSource_f2v3a"]
 scenes/1/scene = ExtResource("1_odc53")
@@ -29,6 +30,7 @@ tile_set = SubResource("TileSet_aeg28")
 format = 2
 layer_0/y_sort_enabled = true
 layer_0/tile_data = PackedInt32Array(65535, 1, 65536, 131071, 1, 65536, 196607, 1, 65536, 262143, 1, 65536, 327679, 1, 65536, 393215, 1, 65536, 327680, 1, 65536, 327681, 1, 65536, 327682, 1, 65536, 327683, 1, 65536, 327684, 1, 65536, 0, 1, 65536, 1, 1, 65536, 2, 1, 65536, 3, 1, 65536, 4, 1, 65536, 196613, 1, 65536, 393218, 1, 65536, 262148, 1, 65536, 196612, 1, 65536, 131076, 1, 65536, 65540, 1, 65536, 65539, 1, 65536, 65538, 1, 65536, 65537, 1, 65536, 65536, 1, 65536, 131072, 1, 65536, 196608, 1, 65536, 262144, 1, 65536, 262145, 1, 65536, 131073, 1, 65536, 196609, 1, 65536, 262146, 1, 65536, 196610, 1, 65536, 131074, 1, 65536, 196611, 1, 65536, 262147, 1, 65536, 131075, 1, 65536)
+script = ExtResource("4_eq3gc")
 
 [node name="layer_1" type="TileMap" parent="dungeon"]
 y_sort_enabled = true
@@ -36,6 +38,7 @@ tile_set = SubResource("TileSet_aeg28")
 format = 2
 layer_0/y_sort_enabled = true
 layer_0/tile_data = PackedInt32Array(262142, 1, 65536, 131070, 1, 65536, 65534, 1, 65536, -2, 1, 65536, -1, 1, 65536, -65536, 1, 65536, -65534, 1, 65536, -65533, 1, 65536, 327678, 1, 65536)
+script = ExtResource("4_eq3gc")
 
 [node name="layer_2" type="TileMap" parent="dungeon"]
 y_sort_enabled = true
@@ -43,6 +46,7 @@ tile_set = SubResource("TileSet_aeg28")
 format = 2
 layer_0/y_sort_enabled = true
 layer_0/tile_data = PackedInt32Array(262141, 1, 65536, 196605, 1, 65536, 65533, 1, 65536, -3, 1, 65536, -65539, 1, 65536, -65538, 1, 65536, -65537, 1, 65536, -131071, 1, 65536, -131070, 1, 65536)
+script = ExtResource("4_eq3gc")
 
 [node name="layer_3" type="TileMap" parent="dungeon"]
 y_sort_enabled = true
@@ -50,6 +54,7 @@ tile_set = SubResource("TileSet_aeg28")
 format = 2
 layer_0/y_sort_enabled = true
 layer_0/tile_data = PackedInt32Array(196604, 1, 65536, 131068, 1, 65536, 65532, 1, 65536, -4, 1, 65536, -65540, 1, 65536, -131076, 1, 65536, -131075, 1, 65536, -131074, 1, 65536, -131073, 1, 65536, -196608, 1, 65536, -196607, 1, 65536)
+script = ExtResource("4_eq3gc")
 
 [node name="layer_4" type="TileMap" parent="dungeon"]
 y_sort_enabled = true
@@ -57,6 +62,7 @@ tile_set = SubResource("TileSet_aeg28")
 format = 2
 layer_0/y_sort_enabled = true
 layer_0/tile_data = PackedInt32Array(131067, 1, 65536, 65531, 1, 65536, -5, 1, 65536, -65541, 1, 65536, -131077, 1, 65536, -196613, 1, 65536, -196612, 1, 65536, -196611, 1, 65536, -196610, 1, 65536, -196609, 1, 65536, -262144, 1, 65536)
+script = ExtResource("4_eq3gc")
 
 [node name="layer_5" type="TileMap" parent="dungeon"]
 y_sort_enabled = true
@@ -64,6 +70,7 @@ tile_set = SubResource("TileSet_aeg28")
 format = 2
 layer_0/y_sort_enabled = true
 layer_0/tile_data = PackedInt32Array(65530, 1, 65536, -6, 1, 65536, -65542, 1, 65536, -131078, 1, 65536, -196614, 1, 65536, -262150, 1, 65536, -262149, 1, 65536, -262148, 1, 65536, -262147, 1, 65536, -262146, 1, 65536, -262145, 1, 65536)
+script = ExtResource("4_eq3gc")
 
 [node name="player" type="Sprite2D" parent="."]
 y_sort_enabled = true
