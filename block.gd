@@ -46,11 +46,13 @@ func move_in(
 
 func move_out(
 	to : float,
+	behind : bool
 ) -> void:
+	z_index += -10 if behind else 10
+
 	var tween : Tween = create_tween()
 
-	tween.set_ease(Tween.EASE_OUT)
-	tween.set_trans(Tween.TRANS_CIRC)
+	tween.set_ease(Tween.EASE_IN_OUT)
 	tween.tween_property(
 		__sprite,
 		"position:y",

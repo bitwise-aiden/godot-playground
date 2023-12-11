@@ -3,6 +3,7 @@ class_name Game extends Node2D
 
 # Private variables
 
+@onready var __camera : Camera2D = $camera
 @onready var __dungeon : Dungeon = $dungeon
 @onready var __player : Player = $player
 
@@ -26,7 +27,6 @@ func _process(
 		__moving = true
 
 		var mouse_coord : Vector2i = __dungeon.get_mouse_coord()
-		print(mouse_coord)
 
 		if !__dungeon.is_ground_block(mouse_coord):
 			__moving = false
@@ -34,9 +34,18 @@ func _process(
 
 		var location : Vector2 = __dungeon.map_to_local(mouse_coord)
 
-		__player.move(__dungeon.to_global(location))
+		await __player.move(__dungeon.to_global(location))
 
-		if mouse_coord in [Vector2i(-1, 3), Vector2i(2, 0), Vector2i(5, 3), Vector2i(2, 6)]:
+		if __dungeon.is_door_block(mouse_coord):
 			__dungeon.spawn_room(mouse_coord)
+
+			var tween : Tween = create_tween()
+			tween.set_ease(Tween.EASE_OUT)
+			tween.tween_property(
+				__camera,
+				"position",
+				__dungeon.get_camera_target() - Vector2(640.0, 528.0),
+				0.5,
+			)
 	else:
 		__moving = false
