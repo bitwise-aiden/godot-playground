@@ -39,7 +39,7 @@ func enter(
 		__sprite,
 		"position",
 		Vector2.ZERO,
-		0.2,
+		0.2 + randf() * 0.2,
 	)
 
 	await tween.finished
@@ -55,11 +55,9 @@ func exit(
 		__sprite,
 		"position",
 		direction * 200.0,
-		0.2,
+		0.2 + randf() * 0.2,
 	)
 
 	await tween.finished
 
 	__sprite.visible = false
-
-

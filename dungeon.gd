@@ -1,6 +1,12 @@
 class_name Dungeon extends Node2D
 
 
+# Private constants
+
+const __DUNGEON_LAYER : Resource = preload("res://dungeon_layer.tscn")
+const __DUNGEON_HEIGHT : int = 6
+
+
 # Private variables
 
 @onready var __layers : Array = get_children()
@@ -19,7 +25,7 @@ func _ready() -> void:
 		for coord in __layers[i].get_used_cells(0):
 			var delta : Vector2i = coord - __block_centre
 
-			__block_locations.append(Vector3i(delta.x, delta.y, i))
+			__block_locations.append(Vector3i(delta.x, i, delta.y))
 
 	var ground : TileMap = __layers[0]
 	var centre : Vector2 = ground.map_to_local(__block_centre)
@@ -31,43 +37,40 @@ func _ready() -> void:
 
 # Public methods
 
-
 func blocks_enter(
-	direction : Vector2i,
+	direction : Vector3i,
 	except : Array = [],
 ) -> void:
-	var blocks : Array[Block] = get_blocks()
-	blocks.sort_custom(
-		func (a, b):
-			__block_coord(a) * direction < __block_coord(b) * direction
-	)
+	var blocks_by_layer : Dictionary = get_blocks_by_layer(direction)
+	var layers : Array = blocks_by_layer.keys()
+	layers.sort()
 
-	for block in blocks:
-		if except.find(__block_location(block)) != -1:
-			continue
+	for layer : int in layers:
+		for block : Block in blocks_by_layer[layer]:
+			if except.find(__block_location(block)) != -1:
+				continue
 
-		__block_enter(block, direction)
+			__block_enter(block, direction)
 
-		await get_tree().create_timer(0.01).timeout
+		await get_tree().create_timer(0.05).timeout
 
 
 func blocks_exit(
-	direction : Vector2i,
+	direction : Vector3i,
 	except : Array = [],
 ) -> void:
-	var blocks : Array[Block] = get_blocks()
-	blocks.sort_custom(
-		func (a, b):
-			__block_coord(a) * direction > __block_coord(b) * direction
-	)
+	var blocks_by_layer : Dictionary = get_blocks_by_layer(direction)
+	var layers : Array = blocks_by_layer.keys()
+	layers.sort()
 
-	for block in blocks:
-		if except.find(__block_location(block)) != -1:
-			continue
+	for layer : int in layers:
+		for block : Block in blocks_by_layer[layer]:
+			if except.find(__block_location(block)) != -1:
+				continue
 
-		__block_exit(block, direction)
+			__block_exit(block, direction)
 
-		await get_tree().create_timer(0.01).timeout
+		await get_tree().create_timer(0.05).timeout
 
 
 func get_blocks() -> Array[Block]:
@@ -77,6 +80,23 @@ func get_blocks() -> Array[Block]:
 		blocks += layer.get_blocks()
 
 	return blocks
+
+
+func get_blocks_by_layer(
+	axis : Vector3i,
+) -> Dictionary:
+	var blocks_by_layer : Dictionary = {}
+
+	for block in get_blocks():
+		var block_axis : Vector3i = __block_location(block) * axis
+		var value : int = block_axis.x + block_axis.y + block_axis.z
+
+		if !value in blocks_by_layer:
+			blocks_by_layer[value] = []
+
+		blocks_by_layer[value].append(block)
+
+	return blocks_by_layer
 
 
 func get_camera_target() -> Vector2:
@@ -130,20 +150,19 @@ func spawn_room(
 	var behind : bool = offset == offset.abs()
 
 	for block_location in __block_locations:
-		var coord : Vector2i = Vector2i(block_location.x, block_location.y) + __block_centre
-		var layer : int = block_location.z
+		var coord : Vector2i = Vector2i(block_location.x, block_location.z) + __block_centre
+		var layer : int = block_location.y
 
 		__layers[layer].set_cell(0, coord, 1, Vector2i.ZERO, 1)
 
-		curr_blocks[Vector3i(coord.x, coord.y, layer)] = null
+		curr_blocks[Vector3i(coord.x, layer, coord.y)] = null
 
 	await get_tree().process_frame
 
-	var angle : float = Vector2.UP.angle_to(__direction_scalar)
-	var direction : Vector2i = Vector2i(Vector2(offset).rotated(angle))
+	var direction : Vector3i = Vector3i(offset.x, 0.0, offset.y)
 
-	blocks_exit(offset, curr_blocks.keys())
-	blocks_enter(offset, prev_blocks.keys())
+	blocks_exit(direction, curr_blocks.keys())
+	blocks_enter(direction, prev_blocks.keys())
 
 
 # Private methods
@@ -153,33 +172,35 @@ func __block_coord(
 ) -> Vector2i:
 	var location : Vector3i = __block_location(block)
 
-	return Vector2i(location.x, location.y)
+	return Vector2i(location.x, location.z)
 
 
 var __directions : Dictionary = {
-	Vector2i.UP : Vector2(1, -1),
-	Vector2i.RIGHT : Vector2(-1, -1),
-	Vector2i.DOWN : Vector2(-1, 1),
-	Vector2i.LEFT : Vector2(1, 1),
+	Vector3i(0, 0, -1) : Vector2(+1.0, -1.0),
+	Vector3i(0, 0, +1) : Vector2(-1.0, +1.0),
+	Vector3i(+1, 0, 0) : Vector2(+1.0, +1.0),
+	Vector3i(-1, 0, 0) : Vector2(-1.0, -1.0),
+	Vector3i(0, -1, 0) : Vector2(0.0, -1.0),
 }
 
 func __block_enter(
 	block : Block,
-	direction : Vector2i,
+	direction : Vector3i,
 ) -> void:
 	await block.enter(__directions[direction] * __direction_scalar)
 
 
 func __block_exit(
 	block : Block,
-	direction : Vector2i,
+	direction : Vector3i,
 ) -> void:
 	await block.exit(__directions[direction] * __direction_scalar * -1)
+	print(direction)
 
 	var location = __block_location(block)
 
-	var coord : Vector2i = Vector2i(location.x, location.y)
-	var layer : int = location.z
+	var coord : Vector2i = Vector2i(location.x, location.z)
+	var layer : int = location.y
 
 	__layers[layer].erase_cell(0, coord)
 
@@ -191,4 +212,4 @@ func __block_location(
 	var layer : int = __layers.find(parent)
 	var coord : Vector2i = __layers[layer].local_to_map(block.position)
 
-	return Vector3i(coord.x, coord.y, layer)
+	return Vector3i(coord.x, layer, coord.y)

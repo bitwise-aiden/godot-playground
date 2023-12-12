@@ -15,7 +15,7 @@ var __prev_player_coord : Vector2i
 func _ready() -> void:
 	await get_tree().process_frame
 
-	__dungeon.blocks_enter(Vector2.UP)
+	__dungeon.blocks_enter(Vector3i.DOWN)
 	__player.set_direction_scalar(
 		__dungeon.get_diagonal_scalar()
 	)
@@ -38,7 +38,7 @@ func _process(
 			__camera,
 			"position",
 			__dungeon.get_camera_target() - Vector2(960.0, 760.0),
-			0.5,
+			0.8,
 		)
 
 	__prev_player_coord = player_coord
