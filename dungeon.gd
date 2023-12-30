@@ -45,10 +45,44 @@ func blocks_enter(
 	var layers : Array = blocks_by_layer.keys()
 	layers.sort()
 
+	var ground_blocks : Array[Block] = __layers[0].get_blocks()
+	var highest_block : Block = ground_blocks[0]
+
+	for block : Block in ground_blocks:
+		if !is_instance_valid(block) || except.find(__block_location(block)) != -1:
+				continue
+
+		if block.global_position.y > highest_block.global_position.y:
+			highest_block = block
+
+	var coord_to_y : Dictionary = {}
+	for block : Block in ground_blocks:
+		if !is_instance_valid(block) || except.find(__block_location(block)) != -1:
+				continue
+
+		var coord : Vector2i = __block_coord(block)
+
+		if block == highest_block:
+			block.z_index = 1000
+			coord_to_y[coord] = block.z_index
+		else:
+			var delta : Vector2 = block.global_position - highest_block.global_position
+			block.z_index = 1000 - abs(delta.y) * 2 - abs(delta.x)
+
+			coord_to_y[coord] = block.z_index
+
 	for layer : int in layers:
 		for block : Block in blocks_by_layer[layer]:
-			if except.find(__block_location(block)) != -1:
+			if !is_instance_valid(block) || except.find(__block_location(block)) != -1:
 				continue
+
+			var location : Vector3i = __block_location(block)
+			var coord : Vector2i = Vector2i(location.x, location.z)
+
+			if coord in coord_to_y:
+				block.z_index = coord_to_y.get(coord, 0) + location.y * 2
+			else:
+				print("what? ", coord)
 
 			__block_enter(block, direction)
 
@@ -65,12 +99,23 @@ func blocks_exit(
 
 	for layer : int in layers:
 		for block : Block in blocks_by_layer[layer]:
-			if except.find(__block_location(block)) != -1:
+			if !is_instance_valid(block) || except.find(__block_location(block)) != -1:
 				continue
 
 			__block_exit(block, direction)
 
 		await get_tree().create_timer(0.05).timeout
+
+
+func get_block(location : Vector3i) -> Block:
+	var coord : Vector2i = Vector2i(location.x, location.z)
+	var layer : int = location.y
+
+	for block in __layers[layer].get_blocks():
+		if __block_coord(block) == coord:
+			return block
+
+	return null
 
 
 func get_blocks() -> Array[Block]:
@@ -88,8 +133,14 @@ func get_blocks_by_layer(
 	var blocks_by_layer : Dictionary = {}
 
 	for block in get_blocks():
-		var block_axis : Vector3i = __block_location(block) * axis
-		var value : int = block_axis.x + block_axis.y + block_axis.z
+		var location : Vector3i = __block_location(block)
+		var coord : Vector2i = Vector2i(location.x, location.z)
+		var layer : int = location.z
+
+		var delta : Vector2i = __block_centre - coord
+		var delta_axis : Vector2i = delta * Vector2i(axis.x, axis.z)
+
+		var value : int = layer * axis.y + delta_axis.x + delta_axis.y
 
 		if !value in blocks_by_layer:
 			blocks_by_layer[value] = []
@@ -147,22 +198,32 @@ func spawn_room(
 	var offset : Vector2i = (location - __block_centre).clamp(-Vector2i.ONE, Vector2i.ONE)
 	__block_centre += offset * 6
 
-	var behind : bool = offset == offset.abs()
-
 	for block_location in __block_locations:
 		var coord : Vector2i = Vector2i(block_location.x, block_location.z) + __block_centre
 		var layer : int = block_location.y
 
 		__layers[layer].set_cell(0, coord, 1, Vector2i.ZERO, 1)
 
-		curr_blocks[Vector3i(coord.x, layer, coord.y)] = null
+		var new_location : Vector3i = Vector3i(coord.x, layer, coord.y)
+
+		curr_blocks[new_location] = null
+		prev_blocks.erase(new_location)
+
 
 	await get_tree().process_frame
 
 	var direction : Vector3i = Vector3i(offset.x, 0.0, offset.y)
 
-	blocks_exit(direction, curr_blocks.keys())
-	blocks_enter(direction, prev_blocks.keys())
+	blocks_exit(-direction, curr_blocks.keys())
+	await blocks_enter(-direction, prev_blocks.keys())
+
+	for to_delete : Vector3i in prev_blocks.keys():
+		if to_delete in curr_blocks:
+			continue
+
+		__layers[to_delete.y].erase_cell(0, Vector2i(to_delete.x, to_delete.z))
+
+	await get_tree().process_frame
 
 
 # Private methods
@@ -176,10 +237,10 @@ func __block_coord(
 
 
 var __directions : Dictionary = {
-	Vector3i(0, 0, -1) : Vector2(+1.0, -1.0),
-	Vector3i(0, 0, +1) : Vector2(-1.0, +1.0),
-	Vector3i(+1, 0, 0) : Vector2(+1.0, +1.0),
-	Vector3i(-1, 0, 0) : Vector2(-1.0, -1.0),
+	Vector3i(0, 0, -1) : Vector2(-1.0, +1.0),
+	Vector3i(0, 0, +1) : Vector2(+1.0, -1.0),
+	Vector3i(+1, 0, 0) : Vector2(-1.0, -1.0),
+	Vector3i(-1, 0, 0) : Vector2(+1.0, +1.0),
 	Vector3i(0, -1, 0) : Vector2(0.0, -1.0),
 }
 
@@ -194,15 +255,7 @@ func __block_exit(
 	block : Block,
 	direction : Vector3i,
 ) -> void:
-	await block.exit(__directions[direction] * __direction_scalar * -1)
-	print(direction)
-
-	var location = __block_location(block)
-
-	var coord : Vector2i = Vector2i(location.x, location.z)
-	var layer : int = location.y
-
-	__layers[layer].erase_cell(0, coord)
+	await block.exit(__directions[direction] * -__direction_scalar)
 
 
 func __block_location(

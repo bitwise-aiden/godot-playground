@@ -1,4 +1,4 @@
-class_name Player extends Sprite2D
+class_name Player extends Node2D
 
 
 # Private variables

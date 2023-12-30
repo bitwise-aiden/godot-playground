@@ -18,7 +18,7 @@ const __SPRITES : Array[Texture] = [
 # Lifecycle methods
 
 func _ready() -> void:
-	var rand : PackedInt64Array = rand_from_seed(position.x + position.y)
+	var rand : PackedInt64Array = rand_from_seed(global_position.x + global_position.y)
 	__sprite.texture = __SPRITES[rand[0] % __SPRITES.size()]
 	__sprite.visible = false
 
