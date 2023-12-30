@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://brnegihxf4gdi"]
+
+[ext_resource type="Texture2D" uid="uid://dysigmfe4p2bm" path="res://assets/sprites/stone_tile_0.png" id="1_eynoy"]
+[ext_resource type="Script" path="res://block.gd" id="2_7qo1m"]
+
+[node name="block" type="Sprite3D"]
+billboard = 1
+double_sided = false
+texture_filter = 0
+texture = ExtResource("1_eynoy")
+script = ExtResource("2_7qo1m")
