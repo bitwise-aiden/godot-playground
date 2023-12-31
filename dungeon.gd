@@ -13,6 +13,13 @@ const __DUNGEON_HEIGHT : int = 6
 
 var __block_centre : Vector2i = Vector2i(2, 3)
 var __block_locations : Array[Vector3i]
+var __directions : Dictionary = {
+	Vector3i(0, 0, -1) : Vector2(-1.0, +1.0),
+	Vector3i(0, 0, +1) : Vector2(+1.0, -1.0),
+	Vector3i(+1, 0, 0) : Vector2(-1.0, -1.0),
+	Vector3i(-1, 0, 0) : Vector2(+1.0, +1.0),
+	Vector3i(0, -1, 0) : Vector2(0.0, -1.0),
+}
 var __direction_scalar : Vector2
 
 
@@ -66,8 +73,8 @@ func blocks_enter(
 			block.z_index = 1000
 			coord_to_y[coord] = block.z_index
 		else:
-			var delta : Vector2 = block.global_position - highest_block.global_position
-			block.z_index = 1000 - abs(delta.y) * 2 - abs(delta.x)
+			var delta : Vector2i = __block_coord(highest_block) - coord
+			block.z_index = 1000 - delta.y - delta.x
 
 			coord_to_y[coord] = block.z_index
 
@@ -79,10 +86,7 @@ func blocks_enter(
 			var location : Vector3i = __block_location(block)
 			var coord : Vector2i = Vector2i(location.x, location.z)
 
-			if coord in coord_to_y:
-				block.z_index = coord_to_y.get(coord, 0) + location.y * 2
-			else:
-				print("what? ", coord)
+			block.z_index = coord_to_y.get(coord, 0) + location.y * 2
 
 			__block_enter(block, direction)
 
@@ -161,7 +165,12 @@ func get_diagonal_scalar() -> Vector2:
 func is_ground_block(
 	coord : Vector2i,
 ) -> bool:
-	return __layers[0].get_cell_source_id(0, coord) != -1
+	return (
+		__layers[0].get_cell_source_id(0, coord) != -1 &&
+		__layers[1].get_cell_source_id(0, coord) == -1 &&
+		__layers[2].get_cell_source_id(0, coord) == -1
+	)
+
 
 
 func is_door_block(
@@ -192,11 +201,13 @@ func spawn_room(
 	var prev_blocks : Dictionary = {}
 	var curr_blocks : Dictionary = {}
 
-	for block in get_blocks():
-		prev_blocks[__block_location(block)] = null
-
 	var offset : Vector2i = (location - __block_centre).clamp(-Vector2i.ONE, Vector2i.ONE)
+	var direction : Vector3i = Vector3i(offset.x, 0.0, offset.y)
 	__block_centre += offset * 6
+
+	for block in get_blocks():
+		block.z_index -= 0 if direction.x + direction.y + direction.z < 0 else 1000
+		prev_blocks[__block_location(block)] = null
 
 	for block_location in __block_locations:
 		var coord : Vector2i = Vector2i(block_location.x, block_location.z) + __block_centre
@@ -209,10 +220,7 @@ func spawn_room(
 		curr_blocks[new_location] = null
 		prev_blocks.erase(new_location)
 
-
 	await get_tree().process_frame
-
-	var direction : Vector3i = Vector3i(offset.x, 0.0, offset.y)
 
 	blocks_exit(-direction, curr_blocks.keys())
 	await blocks_enter(-direction, prev_blocks.keys())
@@ -235,14 +243,6 @@ func __block_coord(
 
 	return Vector2i(location.x, location.z)
 
-
-var __directions : Dictionary = {
-	Vector3i(0, 0, -1) : Vector2(-1.0, +1.0),
-	Vector3i(0, 0, +1) : Vector2(+1.0, -1.0),
-	Vector3i(+1, 0, 0) : Vector2(-1.0, -1.0),
-	Vector3i(-1, 0, 0) : Vector2(+1.0, +1.0),
-	Vector3i(0, -1, 0) : Vector2(0.0, -1.0),
-}
 
 func __block_enter(
 	block : Block,

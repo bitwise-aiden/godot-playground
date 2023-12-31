@@ -13,6 +13,7 @@ const __SPRITES : Array[Texture] = [
 # Private variables
 
 @onready var __sprite : Sprite2D = $sprite
+@onready var __z_index : Label = $z_index
 
 
 # Lifecycle methods
@@ -22,6 +23,12 @@ func _ready() -> void:
 	__sprite.texture = __SPRITES[rand[0] % __SPRITES.size()]
 	__sprite.visible = false
 
+
+func _set(property: StringName, value: Variant) -> bool:
+	if property == "z_index":
+		__z_index.text = "%d" % value
+
+	return false
 
 # Public methods
 

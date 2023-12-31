@@ -9,3 +9,13 @@ script = ExtResource("1_kqpi7")
 [node name="sprite" type="Sprite2D" parent="."]
 texture = ExtResource("2_3k8sj")
 offset = Vector2(0, 8)
+
+[node name="z_index" type="Label" parent="."]
+visible = false
+z_index = 10
+offset_left = -29.0
+offset_top = -17.0
+theme_override_font_sizes/font_size = 12
+text = "-"
+horizontal_alignment = 1
+vertical_alignment = 1
