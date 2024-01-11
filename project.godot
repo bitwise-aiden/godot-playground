@@ -11,5 +11,16 @@ config_version=5
 [application]
 
 config/name="godot-playground"
-config/features=PackedStringArray("4.2", "Forward Plus")
+run/main_scene="res://source/world/dungeon.tscn"
+config/features=PackedStringArray("4.3")
 config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
+environment/defaults/default_clear_color=Color(0.168627, 0.0235294, 0.109804, 1)

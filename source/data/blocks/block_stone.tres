@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="DataBlock" load_steps=5 format=3 uid="uid://cigkc5hr710xo"]
+
+[ext_resource type="Script" path="res://source/data/block.gd" id="1_eivdm"]
+[ext_resource type="Texture2D" uid="uid://becpg7syoqy1q" path="res://assets/blocks/stone_block_0.png" id="2_g3g1a"]
+[ext_resource type="Texture2D" uid="uid://b13ma2nscjpxe" path="res://assets/blocks/stone_block_1.png" id="3_cqylb"]
+[ext_resource type="Texture2D" uid="uid://bw7wk0l3kar2k" path="res://assets/blocks/stone_block_2.png" id="4_5rya4"]
+
+[resource]
+script = ExtResource("1_eivdm")
+textures = Array[Texture2D]([ExtResource("2_g3g1a"), ExtResource("3_cqylb"), ExtResource("4_5rya4")])

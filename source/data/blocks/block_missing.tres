@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="DataBlock" load_steps=3 format=3 uid="uid://dceo0ecfck7vt"]
+
+[ext_resource type="Script" path="res://source/data/block.gd" id="1_rxl6c"]
+[ext_resource type="Texture2D" uid="uid://d02fdokswqqy4" path="res://assets/blocks/missing_block.png" id="2_ryja8"]
+
+[resource]
+script = ExtResource("1_rxl6c")
+textures = Array[Texture2D]([ExtResource("2_ryja8")])

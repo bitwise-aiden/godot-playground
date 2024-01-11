@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://bwq7uy86lppyc"]
+
+[ext_resource type="Script" path="res://source/world/block.gd" id="1_1ppae"]
+[ext_resource type="Texture2D" uid="uid://d02fdokswqqy4" path="res://assets/blocks/missing_block.png" id="2_e6wif"]
+
+[node name="block" type="Node2D"]
+script = ExtResource("1_1ppae")
+
+[node name="sprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_e6wif")
