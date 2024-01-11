@@ -1,13 +1,27 @@
-[gd_scene load_steps=10 format=3 uid="uid://blcmb7qxwm3hk"]
+[gd_scene load_steps=12 format=3 uid="uid://blcmb7qxwm3hk"]
 
-[ext_resource type="PackedScene" uid="uid://dk0x2n3o8hcle" path="res://block.tscn" id="1_odc53"]
 [ext_resource type="Script" path="res://game.gd" id="1_xng4h"]
 [ext_resource type="Script" path="res://dungeon.gd" id="2_y7hv0"]
+[ext_resource type="Script" path="res://block.gd" id="3_xix68"]
+[ext_resource type="Texture2D" uid="uid://ct3avav5scc0" path="res://block_0.png" id="4_0qb7h"]
 [ext_resource type="Script" path="res://dungeon_layer.gd" id="4_eq3gc"]
 [ext_resource type="PackedScene" uid="uid://26sn8868otbf" path="res://player.tscn" id="6_5vx3i"]
 
+[sub_resource type="PackedScene" id="PackedScene_t46ne"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"names": PackedStringArray("block", "Node2D", "script", "sprite", "Sprite2D", "texture", "offset", "z_index", "Label", "visible", "z_index", "offset_left", "offset_top", "theme_override_font_sizes/font_size", "text", "horizontal_alignment", "vertical_alignment"),
+"node_count": 3,
+"node_paths": [NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 1, 2, 0, 0, 1073741824, 0, 4, 3, -1, 2, 5, 1, 6, 2, 0, 1073741825, 0, 8, 7, -1, 8, 9, 3, 10, 4, 11, 5, 12, 6, 13, 7, 14, 8, 15, 9, 16, 10, 0),
+"variants": [ExtResource("3_xix68"), ExtResource("4_0qb7h"), Vector2(0, 8), false, 10, -29.0, -17.0, 12, "-", 1, 1],
+"version": 3
+}
+
 [sub_resource type="TileSetScenesCollectionSource" id="TileSetScenesCollectionSource_f2v3a"]
-scenes/1/scene = ExtResource("1_odc53")
+scenes/1/scene = SubResource("PackedScene_t46ne")
 
 [sub_resource type="TileSet" id="TileSet_aeg28"]
 tile_shape = 1
@@ -16,7 +30,7 @@ tile_size = Vector2i(64, 32)
 sources/1 = SubResource("TileSetScenesCollectionSource_f2v3a")
 
 [sub_resource type="TileSetScenesCollectionSource" id="TileSetScenesCollectionSource_xdelr"]
-scenes/1/scene = ExtResource("1_odc53")
+scenes/1/scene = SubResource("PackedScene_t46ne")
 
 [sub_resource type="TileSet" id="TileSet_tans4"]
 tile_shape = 1

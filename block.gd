@@ -1,6 +1,11 @@
 class_name Block extends Node2D
 
 
+# Public signals
+
+signal z_index_changed(value : int)
+
+
 # Private constants
 
 const __SPRITES : Array[Texture] = [
@@ -27,6 +32,7 @@ func _ready() -> void:
 func _set(property: StringName, value: Variant) -> bool:
 	if property == "z_index":
 		__z_index.text = "%d" % value
+		z_index_changed.emit(value)
 
 	return false
 

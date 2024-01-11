@@ -19,6 +19,7 @@ var __directions : Dictionary = {
 	Vector3i(+1, 0, 0) : Vector2(-1.0, -1.0),
 	Vector3i(-1, 0, 0) : Vector2(+1.0, +1.0),
 	Vector3i(0, -1, 0) : Vector2(0.0, -1.0),
+	Vector3i(0, +1, 0) : Vector2(0.0, +1.0),
 }
 var __direction_scalar : Vector2
 
@@ -70,13 +71,11 @@ func blocks_enter(
 		var coord : Vector2i = __block_coord(block)
 
 		if block == highest_block:
-			block.z_index = 1000
-			coord_to_y[coord] = block.z_index
+			coord_to_y[coord] = 1000
 		else:
 			var delta : Vector2i = __block_coord(highest_block) - coord
-			block.z_index = 1000 - delta.y - delta.x
 
-			coord_to_y[coord] = block.z_index
+			coord_to_y[coord] = 1000 - delta.y - delta.x
 
 	for layer : int in layers:
 		for block : Block in blocks_by_layer[layer]:
@@ -86,9 +85,7 @@ func blocks_enter(
 			var location : Vector3i = __block_location(block)
 			var coord : Vector2i = Vector2i(location.x, location.z)
 
-			block.z_index = coord_to_y.get(coord, 0) + location.y * 2
-
-			__block_enter(block, direction)
+			__block_enter(block, Vector3i.UP, coord_to_y.get(coord, 0) + location.y * 2)
 
 		await get_tree().create_timer(0.05).timeout
 
@@ -247,8 +244,18 @@ func __block_coord(
 func __block_enter(
 	block : Block,
 	direction : Vector3i,
+	z_index : int,
 ) -> void:
+	__block_index(block, z_index)
 	await block.enter(__directions[direction] * __direction_scalar)
+	#block.z_index = z_index
+
+func __block_index(
+	block : Block,
+	z_index : int,
+) -> void:
+	await create_tween().tween_interval(0.2).finished
+	block.z_index = z_index
 
 
 func __block_exit(

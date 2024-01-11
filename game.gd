@@ -9,6 +9,7 @@ class_name Game extends Node2D
 
 var __prev_player_coord : Vector2i
 var __prev_player_position : Vector2
+var __prev_player_block : Block
 
 
 # Lifecycle methods
@@ -20,6 +21,12 @@ func _ready() -> void:
 	__player.set_direction_scalar(
 		__dungeon.get_diagonal_scalar()
 	)
+
+
+func __set_player_z_index(
+	value : int,
+) -> void:
+	__player.z_index = value
 
 
 func _process(
@@ -38,6 +45,11 @@ func _process(
 
 	if player_coord == __prev_player_coord:
 		return
+
+	block.z_index_changed.connect(__set_player_z_index)
+	if __prev_player_block:
+		__prev_player_block.z_index_changed.disconnect(__set_player_z_index)
+	__prev_player_block = block
 
 	if __dungeon.is_door_block(player_coord):
 		__dungeon.spawn_room(player_coord)
