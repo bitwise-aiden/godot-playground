@@ -19,17 +19,28 @@ func _ready() -> void:
 	for x in size:
 		for y in size:
 			for z in size:
+				if y in [1, 2] && 3 in [x, z]:
+					continue
+
 				if x == 0 || y == 0 || z == 0:
-					var block : WorldBlock = __WORLD_BLOCK.instantiate()
-					block.coord = Vector3i(x, y, z)
+					add_block(Vector3i(x, y, z), __DATA_BLOCKS[0])
 
-					var index : int = rand_from_seed(hash(block.coord))[0] % __DATA_BLOCKS.size()
-					block.data = __DATA_BLOCKS[index]
+	add_block(Vector3i(6, 0, 3), __DATA_BLOCKS[0])
+	add_block(Vector3i(3, 0, 6), __DATA_BLOCKS[0])
 
-					block.position = Vector2(
-						z - x,
-						(z + x) * 0.5 - y,
-					) * 32.0
-					block.z_index = y
 
-					add_child(block)
+# Public methods
+
+func add_block(
+	coord : Vector3i,
+	data : DataBlock,
+) -> WorldBlock:
+	var block : WorldBlock = __WORLD_BLOCK.instantiate()
+	block.coord = coord
+	block.data = data
+
+	add_child(block)
+
+	return block
+
+
