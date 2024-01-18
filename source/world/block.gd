@@ -7,10 +7,7 @@ var coord : Vector3i :
 	set(value):
 		coord = value
 
-		__coord_position = Vector2(
-			value.z - value.x,
-			(value.z + value.x) * 0.5 - value.y,
-		) * WorldConstants.HALF_BLOCK_SIZE
+		__coord_position = WorldConstants.coord_to_world(coord)
 
 		__update_position()
 
