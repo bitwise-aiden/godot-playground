@@ -21,9 +21,9 @@ func _ready() -> void:
 
 	var size : int = 6
 
-	for x in size:
-		for y in size:
-			for z in size:
+	for x : int in size:
+		for y : int in size:
+			for z : int in size:
 				if y in [1, 2] && 3 in [x, z]:
 					continue
 
@@ -39,10 +39,21 @@ func _ready() -> void:
 		spawn_block(Vector3i(3, 0, 6), __DATA_BLOCKS[0]),
 	)
 
-	for i in 5:
-		for direction in [Vector3i.DOWN, Vector3i.RIGHT, Vector3i.FORWARD, Vector3i.UP, Vector3i.LEFT, Vector3i.BACK]:
-			await room.transition_in(direction)
-			await room.transition_out(direction)
+	var directions : Array[Vector3i] = [
+		Vector3i.DOWN,
+		Vector3i.RIGHT,
+		Vector3i.FORWARD,
+		Vector3i.UP,
+		Vector3i.LEFT,
+		Vector3i.BACK,
+	]
+
+	while true:
+		for j : int in  directions.size():
+			await room.transition_in(directions[j])
+			await create_tween().tween_interval(0.5).finished
+			await room.transition_out(directions[(j + 1) % directions.size()])
+			await create_tween().tween_interval(0.5).finished
 
 
 # Public methods

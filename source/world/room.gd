@@ -38,7 +38,7 @@ func __coords_by_layer(
 ) -> Dictionary:
 	var coords_by_layer : Dictionary = {}
 
-	for coord in __blocks.keys():
+	for coord : Vector3i in __blocks.keys():
 		var masked_coord = coord * direction
 		var layer : int = (masked_coord.x + masked_coord.y + masked_coord.z)
 
@@ -65,12 +65,19 @@ func __transition(
 			return a * ordering < b * ordering
 	)
 
-	var tween : Tween = create_tween()
+	var tween : Tween
 
-	for layer in sorted_layers:
+	for i : int in sorted_layers.size():
+		tween = create_tween()
+
+		tween.set_ease(Tween.EASE_IN_OUT)
+		tween.set_trans(Tween.TRANS_CIRC)
+		tween.tween_interval(0.1 * i)
 		tween.tween_interval(0.0)
 
-		for coord in coords_by_layer[layer]:
+		var layer : int = sorted_layers[i]
+
+		for coord : Vector3i in coords_by_layer[layer]:
 			var block : WorldBlock = __blocks[coord]
 			block.offset = from
 
