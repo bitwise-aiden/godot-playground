@@ -72,20 +72,17 @@ func __transition(
 
 		tween.set_ease(Tween.EASE_IN_OUT)
 		tween.set_trans(Tween.TRANS_CIRC)
+
 		tween.tween_interval(0.1 * i)
+
 		tween.tween_interval(0.0)
+		tween.set_parallel()
 
 		var layer : int = sorted_layers[i]
 
 		for coord : Vector3i in coords_by_layer[layer]:
 			var block : WorldBlock = __blocks[coord]
-			block.offset = from
+			block.transition(from, to, tween)
 
-			tween.parallel().tween_property(
-				block,
-				"offset",
-				to,
-				0.2 + randf() * 0.3
-			)
 
 	await tween.finished

@@ -3,8 +3,15 @@
 [ext_resource type="Script" path="res://source/world/block.gd" id="1_1ppae"]
 [ext_resource type="Texture2D" uid="uid://d02fdokswqqy4" path="res://assets/blocks/missing_block.png" id="2_e6wif"]
 
-[node name="block" type="Node2D"]
+[node name="block" type="StaticBody2D"]
 script = ExtResource("1_1ppae")
 
 [node name="sprite" type="Sprite2D" parent="."]
 texture = ExtResource("2_e6wif")
+
+[node name="collider_bottom" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(0, 0, 32, 16, 0, 32, -32, 16)
+
+[node name="collider_top" type="CollisionPolygon2D" parent="."]
+position = Vector2(0, -32)
+polygon = PackedVector2Array(0, 0, 32, 16, 0, 32, -32, 16)

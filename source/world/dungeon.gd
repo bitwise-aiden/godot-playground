@@ -1,5 +1,10 @@
 class_name WorldDungeon extends Node2D
 
+#
+# NOTE: This script is mostly testing logic for the time being. It will
+#		be updated to house more permanent features in the future.
+#
+
 
 # Private constants
 
@@ -10,6 +15,7 @@ const __DATA_BLOCKS : Array[Resource] = [
 ]
 
 const __WORLD_BLOCK : Resource = preload("res://source/world/block.tscn")
+const __WORLD_PLAYER : Resource = preload("res://source/world/player.tscn")
 const __WORLD_ROOM : Resource = preload("res://source/world/room.tscn")
 
 
@@ -38,22 +44,30 @@ func _ready() -> void:
 	room.add_block(
 		spawn_block(Vector3i(3, 0, 6), __DATA_BLOCKS[0]),
 	)
+	await room.transition_in(Vector3i.DOWN)
 
-	var directions : Array[Vector3i] = [
-		Vector3i.DOWN,
-		Vector3i.RIGHT,
-		Vector3i.FORWARD,
-		Vector3i.UP,
-		Vector3i.LEFT,
-		Vector3i.BACK,
-	]
+	var player_coord : Vector3i = Vector3i(3, 0, 3)
 
-	while true:
-		for j : int in  directions.size():
-			await room.transition_in(directions[j])
-			await create_tween().tween_interval(0.5).finished
-			await room.transition_out(directions[(j + 1) % directions.size()])
-			await create_tween().tween_interval(0.5).finished
+	var player : WorldPlayer = spawn_player(player_coord)
+	player.position = Vector2.UP * 200.0
+	player.z_index = 100
+
+	add_child(player)
+
+	var tween : Tween = create_tween()
+
+	tween.set_ease(Tween.EASE_OUT)
+
+	tween.tween_property(
+		player,
+		"position",
+		WorldConstants.coord_to_world(player_coord) - Vector2(0.0, 8.0),
+		0.5
+	)
+
+	await tween.finished
+
+	player.z_index = 1
 
 
 # Public methods
@@ -64,7 +78,18 @@ func spawn_block(
 ) -> WorldBlock:
 	var block : WorldBlock = __WORLD_BLOCK.instantiate()
 
+	block.collider = WorldBlock.Collider.Bottom if coord.y == 1 else WorldBlock.Collider.None
 	block.coord = coord
 	block.data = data
 
 	return block
+
+
+func spawn_player(
+	coord : Vector3i,
+) -> WorldPlayer:
+	var player : WorldPlayer = __WORLD_PLAYER.instantiate()
+
+	player.position = WorldConstants.coord_to_world(coord) - Vector2(0.0, 8.0)
+
+	return player
