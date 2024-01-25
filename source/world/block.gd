@@ -63,12 +63,9 @@ func _ready() -> void:
 # Public methods
 
 func transition(
-	from : Vector2,
 	to : Vector2,
 	tween : Tween = create_tween()
 ) -> void:
-	offset = from
-
 	tween.tween_property(
 		self,
 		"offset",

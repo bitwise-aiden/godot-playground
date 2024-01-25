@@ -51,6 +51,15 @@ func _ready() -> void:
 	var player : WorldPlayer = spawn_player(player_coord)
 	player.position = Vector2.UP * 200.0
 	player.z_index = 100
+	player.coord_changed.connect(
+		func(c : Vector3i):
+			var b : WorldBlock = room.get_block(c)
+
+			if b:
+				b.modulate = Color(randf(), randf(), randf())
+
+			$test.position = player.global_position
+	)
 
 	add_child(player)
 
@@ -90,6 +99,7 @@ func spawn_player(
 ) -> WorldPlayer:
 	var player : WorldPlayer = __WORLD_PLAYER.instantiate()
 
+	player.coord = coord
 	player.position = WorldConstants.coord_to_world(coord) - Vector2(0.0, 8.0)
 
 	return player

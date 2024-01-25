@@ -7,3 +7,10 @@ script = ExtResource("1_ls5mt")
 
 [node name="camera" type="Camera2D" parent="."]
 zoom = Vector2(2.5, 2.5)
+
+[node name="test" type="ColorRect" parent="."]
+z_index = 10
+offset_top = -3.45
+offset_right = 5.0
+offset_bottom = 1.55
+rotation = 0.785398

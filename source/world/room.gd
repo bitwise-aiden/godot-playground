@@ -16,6 +16,11 @@ func add_block(
 	__blocks[block.coord] = block
 	add_child(block)
 
+func get_block(
+	coord : Vector3i,
+) -> WorldBlock:
+	return __blocks.get(coord)
+
 
 func transition_in(
 	direction : Vector3i,
@@ -82,7 +87,8 @@ func __transition(
 
 		for coord : Vector3i in coords_by_layer[layer]:
 			var block : WorldBlock = __blocks[coord]
-			block.transition(from, to, tween)
+			block.offset = from
+			block.transition(to, tween)
 
 
 	await tween.finished

@@ -8,10 +8,11 @@ script = ExtResource("1_1ppae")
 
 [node name="sprite" type="Sprite2D" parent="."]
 texture = ExtResource("2_e6wif")
+offset = Vector2(0, 32)
 
 [node name="collider_bottom" type="CollisionPolygon2D" parent="."]
+position = Vector2(0, 32)
 polygon = PackedVector2Array(0, 0, 32, 16, 0, 32, -32, 16)
 
 [node name="collider_top" type="CollisionPolygon2D" parent="."]
-position = Vector2(0, -32)
 polygon = PackedVector2Array(0, 0, 32, 16, 0, 32, -32, 16)
